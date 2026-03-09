@@ -1,0 +1,17 @@
+{
+    "name": "@aporte/shared",
+    "version": "1.0.0",
+    "private": true,
+    "exports": {
+        ".": "./src/index.ts"
+    },
+    "scripts": {
+        "lint": "eslint src/"
+    },
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "eslint": "^9",
+        "typescript": "^5",
+        "typescript-eslint": "^8.56.1"
+    }
+}

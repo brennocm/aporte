@@ -1,0 +1,38 @@
+name: aporte
+
+services:
+  web:
+    container_name: aporte-web
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=file:/app/apps/web/prisma/aporte.db
+      - AUTH_SECRET=${AUTH_SECRET}
+      - NEXT_PUBLIC_API_URL=http://math-engine:8000
+      - MATH_ENGINE_URL=http://math-engine:8000
+    volumes:
+      - ./apps/web/prisma:/app/apps/web/prisma
+    depends_on:
+      - math-engine
+
+  math-engine:
+    container_name: aporte-math
+    build:
+      context: ./services/math-engine
+      dockerfile: Dockerfile
+    environment:
+      - PORT=8000
+    volumes:
+      - math_cache:/app/cache
+    depends_on:
+      - redis
+
+  redis:
+    container_name: aporte-redis
+    image: redis:alpine
+
+volumes:
+  math_cache:

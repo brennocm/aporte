@@ -1,0 +1,28 @@
+{
+    "name": "@aporte/ui",
+    "version": "1.0.0",
+    "private": true,
+    "exports": {
+        "./tailwind.css": "./src/tailwind.css",
+        ".": "./src/index.ts"
+    },
+    "scripts": {
+        "lint": "eslint src/"
+    },
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "@types/react": "^19",
+        "@types/react-dom": "^19",
+        "eslint": "^9",
+        "eslint-plugin-react-hooks": "^7.0.1",
+        "eslint-plugin-react-refresh": "^0.5.2",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+        "typescript": "^5",
+        "typescript-eslint": "^8.56.1"
+    },
+    "peerDependencies": {
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0"
+    }
+}

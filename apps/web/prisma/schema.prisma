@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String?  // Adicionado para auth local
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  portfolios Portfolio[]
+  backtests  Backtest[]
+  settings   Setting?
+}
+
+model Setting {
+  id                  String   @id @default(uuid())
+  userId              String   @unique
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  defaultCurrency      String   @default("BRL")
+  contributionFrequency String   @default("monthly")
+  defaultContribution  Float    @default(1000)
+  dripEnabled         Boolean  @default(true)
+  b3Strict            Boolean  @default(true)
+  discountInflation   Boolean  @default(false)
+  defaultBenchmark    String   @default("CDI")
+  updatedAt           DateTime @updatedAt
+}
+
+model Portfolio {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  assets      Asset[]
+}
+
+model Asset {
+  id          String    @id @default(uuid())
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  ticker      String
+  targetWeight Float    // Percentage, e.g., 0.25 for 25%
+  quantity    Float     @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Backtest {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name          String
+  startDate     String   // e.g., "2018-01"
+  endDate       String   // e.g., "2024-12"
+  cagr          Float
+  maxDrawdown   Float
+  sharpeRatio   Float?
+  totalValue    Float
+  totalInvested Float
+  portfolioId   String?  // Relation optional if portfolio is deleted
+  initialCapital Float?
+  monthlyContribution Float?
+  createdAt     DateTime @default(now())
+}
+
+model AvailableAsset {
+  id        String   @id @default(uuid())
+  ticker    String   @unique
+  name      String
+  updatedAt DateTime @updatedAt
+
+  @@index([ticker])
+}

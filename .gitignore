@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+.venv/
+env/
+venv/
+
+# Build Outputs
+.next/
+out/
+build/
+dist/
+.turbo/
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# Database & Sensitive Data
+*.db
+*.db-journal
+*.sqlite
+*.sqlite-journal
+.env*
+!.env.example
+
+# Infrastructure & Docker
+.docker/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# IDEs & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp

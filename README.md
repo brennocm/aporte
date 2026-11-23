@@ -3,7 +3,7 @@
   <h1>Aporte OSS</h1>
   <p><strong>Uma plataforma robusta, código aberto e self-hosted para rebalanceamento e backtesting de carteiras.</strong></p>
   <p>
-    <a ><img src="https://img.shields.io/badge/license-AGPL--3.0-blue" alt="License" /></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-blue" alt="License" /></a>
   </p>
 </div>
 
@@ -208,6 +208,11 @@ Foi empacotado o Motor Matemático em Python (FastAPI) e o Frontend em Next.js j
 ### Instalação em 1 Clique
 
 Clone este repositório e execute o script de inicialização na raiz:
+
+```bash
+git clone https://github.com/brennocm/aporte.git
+cd aporte
+```
 
 **Linux / macOS:**
 ```bash

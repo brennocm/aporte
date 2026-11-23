@@ -1,103 +1,101 @@
 <div align="center">
   <img src="./assets/logo-without-bg.png" alt="Aporte Logo" width="140" height="140">
   <h1>Aporte OSS</h1>
-  <p><strong>Uma plataforma robusta, código aberto e self-hosted para rebalanceamento e backtesting de carteiras.</strong></p>
+  <p><strong>Open-source, self-hosted platform for portfolio rebalancing and backtesting.</strong></p>
   <p>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-blue" alt="License" /></a>
   </p>
 </div>
 
-## O Backtester Definitivo
+## Why Aporte
 
-O Aporte foi construído para resolver uma dor peculiar do pequeno investidor: **simular a realidade de aportes mensais com rebalanceamento ativo**. 
-Ao contrário da maioria dos backtesters que mostram apenas retornos de aportes únicos ("lump sum"), o Aporte calcula dinamicamente exatamente o que acontece quando você investe dinheiro novo todo mês para comprar o *ativo que está para trás* na sua carteira (também conhecido como Rebalanceamento por Aportes).
+Aporte was built for a specific need of individual investors: **simulating real monthly contributions with active rebalancing**.
+Most backtesters only show lump-sum returns. Aporte computes what actually happens when you invest new money every month and use it to buy the asset that is *lagging behind* its target weight (rebalancing through contributions).
 
-Construído inteiramente no espírito **Self-Hosted** (hospede você mesmo), o Aporte garante 100% de privacidade dos dados. Sem SaaS, sem sincronização em nuvem, sem rastreamento externo. Seus dados financeiros vivem inteiramente na sua própria máquina.
+It is fully **self-hosted**, so your data stays private: no SaaS, no cloud sync, no third-party tracking. Your financial data lives only on your machine.
 
-## Funcionalidades
+## Features
 
-- **Backtesting Flexível**: Simula aportes **mensais, quinzenais ou semanais** com cálculo de ganho real.
-- **Motor de Rebalanceamento Inteligente**: O algoritmo central detecta automaticamente déficits no peso e compra os ativos abaixo da meta durante os aportes.
-- **Benchmarks Avançados**: Compare sua carteira contra **IBOV, S&P 500, CDI (Selic)** ou **IPCA + 6%** (Retorno Real).
-- **Suporte a Múltiplos Ativos**: Extrai dados históricos gratuitos via Yahoo Finance para Ações da B3 (Brasil), Ações dos EUA, BDRs, Criptomoedas e ETFs.
-- **Reinvestimento de Dividendos (DRIP)**: Escolha se deseja reinvestir dividendos automaticamente ou mantê-los em caixa.
-- **Otimização e Proteção (Redis Cache)**: Camada de cache nativa que evita *rate limiting* e acelera simulações para < 50ms.
-  - **Eficiência**: O sistema utiliza um padrão *Cache-Aside* com o Redis para armazenar dados de séries históricas. Isso evita chamadas repetitivas às APIs do Yahoo Finance e do Banco Central (SGS), protegendo contra bloqueios de IP e garantindo performance instantânea após a primeira consulta.
-  - **TTLs**: Séries históricas (24h), Dividendos (24h), Cotações Real-time (5 min) e Dados Macro/BCB (1 semana).
-- **Privacidade em Primeiro Lugar**: Banco de dados SQLite local e credenciais auto-hospedadas NextAuth. Você é o único administrador.
-
----
-
-## Conceitos Técnicos & Glossário
-
-Para aproveitar ao máximo o Aporte OSS, é importante entender os pilares financeiros que regem o motor de simulação:
-
-###  Rebalanceamento por Aportes
-Esta é a funcionalidade central do projeto. Ao contrário do rebalanceamento tradicional (que exige vender ativos que subiram para comprar os que caíram), o **Rebalanceamento por Aportes** utiliza apenas o capital novo (seu aporte mensal) para comprar os ativos que estão com o maior déficit em relação à meta. Isso elimina o pagamento de impostos sobre vendas e reduz custos de corretagem.
-
-###  Métricas de Desempenho
-- **Master CAGR (Compound Annual Growth Rate)**: A Taxa de Crescimento Anual Composta. Representa o retorno anual médio que sua carteira entregou no período simulado, considerando o efeito dos juros compostos.
-- **Max Drawdown**: Representa a queda máxima (do pico ao fundo) que sua carteira sofreu. É a métrica mais pura de risco psicológico: "quanto eu aguentaria ver meu patrimônio cair sem pânico?".
-- **Sharpe Ratio**: Uma medida que avalia o retorno excedente da carteira em relação à sua volatilidade. Quanto maior o Sharpe, mais eficiente foi o retorno em relação ao risco corrido.
-
-### Glossário de Termos
-- **DRIP (Dividend Reinvestment Plan)**: Estratégia de pegar cada centavo recebido em dividendos e juros sobre capital próprio (JCP) e reinvesti-los imediatamente para acelerar o efeito "bola de neve".
-- **Índice de Referência / Custo de Oportunidade**: Indicador usado para comparar a performance da sua carteira (ex: "Minha carteira rendeu mais que o CDI ou o Ibovespa?"). No gráfico, é representado pela **linha laranja**.
-- **B3 Strict Mode**: Um modo de simulação que restringe compras apenas a lotes inteiros (múltiplos de 1 ou 100 conforme a regra da B3), simulando com precisão a impossibilidade de comprar frações decimais em certos cenários.
-- **IPCA (Inflação)**: O Índice de Preços ao Consumidor Amplo. Quando ativado, o sistema desconta essa taxa do valor final para mostrar o seu **Ganho Real** (poder de compra).
+- **Flexible backtesting**: simulates **monthly, biweekly or weekly** contributions and computes real (inflation-adjusted) gains.
+- **Rebalancing engine**: detects weight deficits automatically and buys the assets below target with each contribution.
+- **Benchmarks**: compare your portfolio against **IBOV, S&P 500, CDI (Selic)** or **IPCA + 6%** (real return).
+- **Multiple asset classes**: pulls free historical data from Yahoo Finance for Brazilian (B3) and US stocks, BDRs, cryptocurrencies and ETFs.
+- **Dividend reinvestment (DRIP)**: reinvest dividends automatically or keep them as cash.
+- **Redis cache**: a built-in cache layer that avoids rate limiting and brings simulations under 50 ms.
+  - **Efficiency**: a *cache-aside* pattern stores historical series in Redis. This avoids repeated calls to the Yahoo Finance and Central Bank of Brazil (SGS) APIs, protects against IP blocks and makes repeated queries instant.
+  - **TTLs**: historical series (24 h), dividends (24 h), real-time quotes (5 min) and macro data from the Central Bank (1 week).
+- **Privacy first**: local SQLite database and self-hosted NextAuth credentials. You are the only administrator.
 
 ---
 
-## Tour Visual
+## Concepts and glossary
 
-O Aporte OSS oferece uma interface técnica e limpa, desenhada para clareza visual e precisão nos dados. Abaixo, detalhamos os principais módulos do sistema:
+The simulation engine rests on a few financial ideas:
 
-### 1. Autenticação Privada
-O sistema é **self-hosted**. Ao iniciar, você cria uma conta local que vive apenas no seu banco de dados. Seus dados financeiros nunca saem da sua máquina.
+### Rebalancing through contributions
+This is the core of the project. Traditional rebalancing sells the assets that went up to buy the ones that went down. **Rebalancing through contributions** uses only new money (your monthly contribution) to buy the assets with the largest deficit against the target. That avoids taxes on sales and cuts brokerage costs.
 
-![Tela de Autenticação](./assets/auth.png)
+### Performance metrics
+- **CAGR (Compound Annual Growth Rate)**: the average yearly return of the portfolio over the simulated period, with compounding.
+- **Max drawdown**: the largest peak-to-trough fall of the portfolio. It is the plainest measure of psychological risk: how far could you watch your savings drop without panicking?
+- **Sharpe ratio**: excess return relative to volatility. The higher it is, the more return you got for the risk you took.
 
-### 2. Gestão de Portfólios
-Crie e edite suas carteiras alvo definindo pesos percentuais para cada ativo. O sistema suporta Ações, FIIs, Criptos e Stocks americanas.
+### Glossary
+- **DRIP (Dividend Reinvestment Plan)**: reinvesting every dividend and interest on equity (JCP) right away to speed up compounding.
+- **Benchmark / opportunity cost**: the index used to compare your portfolio (for example: "did my portfolio beat the CDI or the Ibovespa?"). In the chart it is the **orange line**.
+- **B3 strict mode**: a simulation mode that only buys whole lots (multiples of 1 or 100, following B3 rules), reproducing the cases where fractional shares cannot be bought.
+- **IPCA (inflation)**: Brazil's consumer price index. When enabled, the engine discounts it from the final value to show your **real gain** (purchasing power).
+
+---
+
+## Visual tour
+
+### 1. Private authentication
+Aporte is **self-hosted**. On first start you create a local account that lives only in your database. Your financial data never leaves your machine.
+
+![Sign-in screen](./assets/auth.png)
+
+### 2. Portfolio management
+Create and edit target portfolios by setting a percentage weight for each asset. Brazilian stocks, REITs (FIIs), crypto and US stocks are supported.
 
 <div align="center">
-  <img src="./assets/my-port.png" alt="Meus Portfólios" width="48%">
-  <img src="./assets/edit-port.png" alt="Editar Portfólio" width="48%">
+  <img src="./assets/my-port.png" alt="My portfolios" width="48%">
+  <img src="./assets/edit-port.png" alt="Edit portfolio" width="48%">
 </div>
 
-*À esquerda: Visão geral das carteiras salvas. À direita: Editor de pesos e ativos.*
+*Left: saved portfolios. Right: the asset and weight editor.*
 
-### 3. Motor de Simulação (Backtesting)
-O coração do projeto. Ajuste parâmetros de aporte, frequência e período para ver a projeção do seu patrimônio.
+### 3. Simulation engine (backtesting)
+The heart of the project. Adjust the contribution, frequency and period to see how your savings would have grown.
 
-![Painel de Simulação](./assets/simulation.png)
+![Simulation panel](./assets/simulation.png)
 
-*Gráfico interativo comparando Patrimônio (linha verde), Capital Investido (linha cinza) e o Índice de Referência/Custo de Oportunidade (linha laranja).*
+*Interactive chart comparing portfolio value (green), invested capital (gray) and the benchmark / opportunity cost (orange).*
 
-### 4. Inteligência e Métricas
-Analise o desempenho através de mapas de calor mensais e acompanhe exatamente onde o algoritmo de rebalanceamento realizou as compras.
+### 4. Insights and metrics
+Analyze performance with monthly heatmaps and see exactly where the rebalancing algorithm bought.
 
-![Detalhes do Backtest](./assets/add-info.png)
+![Backtest details](./assets/add-info.png)
 
-*Dropdown de benchmarks e Heatmap color-coded para identificar meses de alta e baixa volatilidade.*
+*Benchmark dropdown and a color-coded heatmap to spot high- and low-volatility months.*
 
-### 5. Configurações e Histórico
-Personalize sua experiência definindo moedas padrão, benchmarks e regras de aporte (DRIP, B3 Mode). Todas as suas simulações ficam salvas para consulta rápida.
+### 5. Settings and history
+Set your default currency, benchmarks and contribution rules (DRIP, B3 mode). Every simulation is saved for quick reference.
 
 <div align="center">
-  <img src="./assets/settings.png" alt="Configurações" width="48%">
-  <img src="./assets/history.png" alt="Histórico de Backtests" width="48%">
+  <img src="./assets/settings.png" alt="Settings" width="48%">
+  <img src="./assets/history.png" alt="Backtest history" width="48%">
 </div>
 
 ---
-## Ativos Suportados
+## Supported assets
 
-O sistema conta com um banco de dados pré-alimentado para facilitar a busca (auto-complete). Atualmente, suportamos mais de 140 ativos:
+A pre-loaded database powers the search auto-complete. More than 140 assets are supported today:
 
 <details>
-<summary><b>📂 Clique para expandir: Ações B3 (IBOV + IBRX + Small Caps)</b></summary>
+<summary><b>📂 Click to expand: B3 stocks (IBOV + IBRX + small caps)</b></summary>
 
-| Ticker | Nome | Ticker | Nome |
+| Ticker | Name | Ticker | Name |
 |:---:|:---|:---:|:---|
 | RRRP3 | 3R Petroleum | ALPA4 | Alpargatas |
 | ABEV3 | Ambev | AMER3 | Americanas |
@@ -143,9 +141,9 @@ O sistema conta com um banco de dados pré-alimentado para facilitar a busca (au
 </details>
 
 <details>
-<summary><b>📂 Clique para expandir: Fundos Imobiliários (FIIs)</b></summary>
+<summary><b>📂 Click to expand: Brazilian REITs (FIIs)</b></summary>
 
-| Ticker | Nome | Ticker | Nome |
+| Ticker | Name | Ticker | Name |
 |:---:|:---|:---:|:---|
 | MXRF11 | Maxi Renda | HGLG11 | CGHG Logística |
 | KNRI11 | Kinea Renda | XPLG11 | XP Log |
@@ -161,9 +159,9 @@ O sistema conta com um banco de dados pré-alimentado para facilitar a busca (au
 </details>
 
 <details>
-<summary><b>📂 Clique para expandir: Criptomoedas</b></summary>
+<summary><b>📂 Click to expand: Cryptocurrencies</b></summary>
 
-| Ticker | Nome | Ticker | Nome |
+| Ticker | Name | Ticker | Name |
 |:---:|:---|:---:|:---|
 | BTC | Bitcoin | ETH | Ethereum |
 | SOL | Solana | XRP | XRP |
@@ -182,9 +180,9 @@ O sistema conta com um banco de dados pré-alimentado para facilitar a busca (au
 </details>
 
 <details>
-<summary><b>📂 Clique para expandir: ETFs & Índices</b></summary>
+<summary><b>📂 Click to expand: ETFs and indices</b></summary>
 
-| Ticker | Nome |
+| Ticker | Name |
 |:---:|:---|
 | BOVA11 | iShares Ibovespa |
 | SMAL11 | iShares Small Cap |
@@ -192,22 +190,24 @@ O sistema conta com um banco de dados pré-alimentado para facilitar a busca (au
 | HASH11 | Hashdex Nasdaq Crypto |
 | QBTC11 | QR Bitcoin ETF |
 | QETH11 | QR Ethereum ETF |
-| USTBRL=X | Dólar / Real |
+| USTBRL=X | US dollar / Brazilian real |
 | ^BVSP | Ibovespa |
 | ^GSPC | S&P 500 |
 
 </details>
 
-## Como Executar (Configuração Zero)
+---
 
-Foi empacotado o Motor Matemático em Python (FastAPI) e o Frontend em Next.js juntos via Docker. Você só precisa de um comando para rodar tudo com segurança.
+## Running it
 
-### Pré-requisitos
-- [Docker](https://docs.docker.com/get-docker/) instalado e rodando.
+The math engine (Python, FastAPI) and the frontend (Next.js) are packaged together with Docker, so one command starts everything.
 
-### Instalação em 1 Clique
+### Requirements
+- [Docker](https://docs.docker.com/get-docker/) installed and running.
 
-Clone este repositório e execute o script de inicialização na raiz:
+### Install
+
+Clone the repository and run the start script from the root:
 
 ```bash
 git clone https://github.com/brennocm/aporte.git
@@ -224,55 +224,54 @@ cd aporte
 .\start.ps1
 ```
 
-*O script gerará automaticamente suas credenciais seguras no arquivo `.env`, construirá as imagens Docker e iniciará o ambiente local.*
+*The script generates your credentials in `.env`, builds the Docker images and starts the local environment.*
 
-> **Parar a Aplicação**: Para parar os containers de forma limpa e liberar memória, execute `./stop.sh` ou `.\stop.ps1`.
+> **Stop**: to stop the containers cleanly and free memory, run `./stop.sh` or `.\stop.ps1`.
 
-> **Resetar o Ambiente**: Se quiser limpar o cache matemático (Redis) e forçar a reconstrução da infraestrutura sem perder seu banco de dados, utilize `./reset.sh` ou `.\reset.ps1`.
+> **Reset**: to clear the math cache (Redis) and rebuild the infrastructure without losing your database, run `./reset.sh` or `.\reset.ps1`.
 
-### Acesso
-Abra seu navegador e acesse:
-[http://localhost:3000](http://localhost:3000)
+### Access
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-1. Crie uma conta local na página de "Cadastro".
-2. Faça login e comece a simular!
+1. Create a local account on the sign-up page.
+2. Sign in and start simulating.
 
-### Variáveis de Ambiente (.env)
+### Environment variables (.env)
 
-O sistema utiliza as seguintes variáveis para configuração. Caso use o `start.sh`, elas são geradas automaticamente.
+`start.sh` generates these for you.
 
-| Variável | Descrição | Valor Padrão |
+| Variable | Description | Default |
 |:--- |:--- |:--- |
-| `AUTH_SECRET` | Chave de criptografia para sessões (NextAuth) | *Gerada no setup* |
-| `NEXT_PUBLIC_API_URL` | URL de comunicação com o Motor Matemático | `http://math-engine:8000` |
-| `DATABASE_URL` | String de conexão com o Banco de Dados | `file:./dev.db` |
-| `REDIS_HOST` | Endereço do servidor Redis para cache | `redis` |
+| `AUTH_SECRET` | Session encryption key (NextAuth) | *Generated at setup* |
+| `NEXT_PUBLIC_API_URL` | URL of the math engine | `http://math-engine:8000` |
+| `DATABASE_URL` | Database connection string | `file:./dev.db` |
+| `REDIS_HOST` | Redis host for the cache | `redis` |
 
 ---
 
-## Arquitetura
+## Architecture
 
-O Aporte utiliza uma abordagem moderna de monorepo full-stack gerenciada pelo Turborepo:
+Aporte is a full-stack monorepo managed with Turborepo:
 
 - **Frontend (`apps/web`)**: Next.js 15 (App Router), Tailwind CSS v4, Recharts.
-- **Biblioteca de Componentes (`packages/ui`)**: Sistema de design compartilhado.
-- **Banco de Dados**: SQLite local via Prisma ORM.
-- **Motor Matemático (`services/math-engine`)**: Python 3.11, FastAPI, Pandas, yfinance.
+- **Component library (`packages/ui`)**: shared design system.
+- **Database**: local SQLite through Prisma ORM.
+- **Math engine (`services/math-engine`)**: Python 3.11, FastAPI, Pandas, yfinance.
 - **Cache**: Redis.
 
 ---
 
 ## Troubleshooting
 
-### Docker falhou em iniciar?
-Certifique-se de que as portas `3000` (Web), `8000` (Math) e `6379` (Redis) estão livres. Tente `docker compose down -v` para limpar volumes orfãos.
+### Docker failed to start?
+Make sure ports `3000` (web), `8000` (math engine) and `6379` (Redis) are free. Try `docker compose down -v` to clean up orphaned volumes.
 
-### Erro de "Rate Limit" no Yahoo Finance?
-O Aporte possui cache em camadas. Se você tentar simular 50 ativos diferentes em 1 minuto, o Yahoo pode bloquear seu IP temporariamente. Aguarde 15 minutos ou use um VPN.
+### Yahoo Finance rate limit error?
+Aporte caches in layers, but if you simulate 50 different assets in one minute, Yahoo may block your IP for a while. Wait 15 minutes or use a VPN.
 
-### Como resetar o Banco de Dados?
-Exclua o arquivo `apps/web/prisma/dev.db` e rode o setup novamente.
+### How do I reset the database?
+Delete `apps/web/prisma/dev.db` and run the setup again.
 
-## Licença
+## License
 
-Este projeto está licenciado sob a **AGPL-3.0**. 
+Licensed under the **AGPL-3.0**. See [LICENSE](LICENSE).
